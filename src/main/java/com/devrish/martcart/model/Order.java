@@ -6,41 +6,38 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.util.Date;
-import java.util.List;
 
+@Document(value = "orders")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-@Document(value = "users")
-public class User {
+public class Order {
 
     @Id
     private ObjectId _id;
 
-    private String firstname;
+    @Field(targetType = FieldType.OBJECT_ID)
+    @DBRef
+    private Product productId; // Reference to Product
 
-    private String lastname;
+    @Field(targetType = FieldType.OBJECT_ID)
+    @DBRef
+    private User userId; // Reference to User
 
-    private String username;
+    private Long quantity;
 
-    @Field(targetType = FieldType.STRING)
-    private UserType userType;
+    private String address;
 
-    private String phone;
-
-    private String email;
-
-    private String password;
+    private Long totalPrice;
 
     @Builder.Default
-    private Date joinDate = new Date(); // default value => current date
-
-    private List<CartItem> cart;
+    private Date orderedAt = new Date();
 
 }

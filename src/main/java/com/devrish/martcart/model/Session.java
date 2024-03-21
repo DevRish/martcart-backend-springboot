@@ -6,41 +6,30 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.util.Date;
-import java.util.List;
 
+@Document(value = "sessions")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document(value = "users")
-public class User {
+public class Session {
 
     @Id
     private ObjectId _id;
 
-    private String firstname;
+    @Field(targetType = FieldType.OBJECT_ID)
+    @DBRef
+    private User userId; // Reference to User
 
-    private String lastname;
-
-    private String username;
-
-    @Field(targetType = FieldType.STRING)
-    private UserType userType;
-
-    private String phone;
-
-    private String email;
-
-    private String password;
-
+    @Indexed(expireAfterSeconds = 1800)
     @Builder.Default
-    private Date joinDate = new Date(); // default value => current date
-
-    private List<CartItem> cart;
+    private Date createdAt = new Date();
 
 }
