@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.util.Date;
 
-@Document(value = "sessions")
+@Document(collection = "sessions")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,8 +28,8 @@ public class Session {
     @DBRef
     private User userId; // Reference to User
 
-    @Indexed(expireAfterSeconds = 1800)
     @Builder.Default
+    @Indexed(name = "sessionTTL", expireAfterSeconds = 1800)
     private Date createdAt = new Date();
 
 }

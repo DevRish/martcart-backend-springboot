@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.util.Date;
 
-@Document(value = "orders")
+@Document(collection = "orders")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
