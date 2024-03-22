@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.Date;
 
@@ -24,8 +22,7 @@ public class Session {
     @Id
     private ObjectId _id;
 
-    @Field(targetType = FieldType.OBJECT_ID)
-    @DBRef
+    @DocumentReference
     private User userId; // Reference to User
 
     @Builder.Default
