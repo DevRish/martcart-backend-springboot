@@ -19,7 +19,7 @@ public class MartcartApplication {
 		SpringApplication.run(MartcartApplication.class, args);
 	}
 
-	@Bean
+//	@Bean
 	public CommandLineRunner loadData(
 			EventRepository eventRepository,
 			CategoryRepository categoryRepository,
