@@ -4,15 +4,21 @@ import com.devrish.martcart.dto.requests.auth.LoginBody;
 import com.devrish.martcart.dto.requests.auth.SignupBody;
 import com.devrish.martcart.dto.responses.AuthResponse;
 import com.devrish.martcart.dto.responses.GenericResponse;
+import com.devrish.martcart.dto.responses.ValidationResponse;
 import com.devrish.martcart.exception.auth.InvalidCredentialsException;
 import com.devrish.martcart.exception.auth.UserNotFoundException;
 import com.devrish.martcart.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -23,7 +29,19 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<GenericResponse> login(@RequestBody LoginBody body) {
+    public ResponseEntity<GenericResponse> login(@Valid @RequestBody LoginBody body, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            log.warn("Validation Error: {}", bindingResult.getAllErrors().get(0).getDefaultMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ValidationResponse(
+                            false,
+                            "Validation Error!",
+                            bindingResult.getAllErrors().stream()
+                                    .map(ObjectError::getDefaultMessage)
+                                    .collect(Collectors.toList())
+                    )
+            );
+        }
         try {
             AuthResponse res = authService.login(body);
             return ResponseEntity.status(HttpStatus.OK).body(res);
