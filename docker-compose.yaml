@@ -1,20 +1,20 @@
 services:
-  server:
-    build:
-      context: .
-      dockerfile: dockerfile
-    volumes:
-      - ./src:/app/src
-    env_file:
-      - ./.env
-    environment:
-      - DATABASE_URL=mongodb://mongodb:27017/martcart
-    depends_on:
-      - mongodb
-    ports:
-      - 5000:5000
-    extra_hosts:
-      - host.docker.internal:host-gateway
+#  server:
+#    build:
+#      context: .
+#      dockerfile: dockerfile
+#    volumes:
+#      - ./src:/app/src
+#    env_file:
+#      - ./.env
+#    environment:
+#      - DATABASE_URL=mongodb://mongodb:27017/martcart
+#    depends_on:
+#      - mongodb
+#    ports:
+#      - 5000:5000
+#    extra_hosts:
+#      - host.docker.internal:host-gateway
 
   mongodb:
     image: mongo
