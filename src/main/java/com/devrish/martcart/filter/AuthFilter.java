@@ -5,7 +5,7 @@ import com.devrish.martcart.model.Session;
 import com.devrish.martcart.model.User;
 import com.devrish.martcart.repository.SessionRepository;
 import com.devrish.martcart.repository.UserRepository;
-import com.devrish.martcart.util.JWTPayload;
+import com.devrish.martcart.util.JWT.JWTPayload;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.crypto.Mac;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+@Component
 @Slf4j
 public class AuthFilter extends OncePerRequestFilter {
 
@@ -35,13 +37,15 @@ public class AuthFilter extends OncePerRequestFilter {
     @Autowired
     private UserRepository userRepository;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         try {
 
+            // log.info("AUTH FILTER RUNNING");
             String authHeader = request.getHeader("Authorization");
 
             if (authHeader == null) {
@@ -56,7 +60,9 @@ public class AuthFilter extends OncePerRequestFilter {
                 return;
             }
 
-            String[] jwtTokenParts = authHeader.split("\\.");
+            String jwtToken = authHeader.split("\\s+")[1];
+
+            String[] jwtTokenParts = jwtToken.split("\\.");
             if (jwtTokenParts.length != 3) {
                 sendUnauthorizedAccessResponse(response);
                 log.error("Invalid jwt token");
@@ -66,6 +72,10 @@ public class AuthFilter extends OncePerRequestFilter {
             String encodedHeader = jwtTokenParts[0];
             String encodedPayload = jwtTokenParts[1];
             String signature = jwtTokenParts[2];
+
+            // log.warn("Received header: {}", encodedHeader);
+            // log.warn("Received payload: {}", encodedPayload);
+            // log.warn("Received signature: {}", signature);
 
             Mac hashFunc = Mac.getInstance("HmacSHA512");
             SecretKeySpec secretKey = new SecretKeySpec(jwtSecret.getBytes(StandardCharsets.UTF_8), "HmacSHA512");
@@ -78,10 +88,11 @@ public class AuthFilter extends OncePerRequestFilter {
             if (!signature.equals(expectedSignature)) {
                 sendUnauthorizedAccessResponse(response);
                 log.error("Invalid jwt token");
+                // log.warn("Expected Signature: {}", expectedSignature);
                 return;
             }
 
-            String decodedPayload = new String(Base64.getDecoder().decode(encodedPayload), StandardCharsets.UTF_8);
+            String decodedPayload = new String(Base64.getUrlDecoder().decode(encodedPayload), StandardCharsets.UTF_8);
             JWTPayload payload = objectMapper.readValue(decodedPayload, JWTPayload.class);
 
             Session session = sessionRepository.findById(payload.getId()).orElse(null);
@@ -107,6 +118,8 @@ public class AuthFilter extends OncePerRequestFilter {
     private void sendUnauthorizedAccessResponse(HttpServletResponse response) throws IOException {
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType("application/json");
-        response.getWriter().write(objectMapper.writeValueAsString(new GenericResponse(false, "Unauthorized Access")));
+        response.getWriter().write(objectMapper.writeValueAsString(
+                GenericResponse.builder().status(false).message("Unauthorized Access").build()
+        ));
     }
 }
