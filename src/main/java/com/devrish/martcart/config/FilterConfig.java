@@ -14,7 +14,12 @@ public class FilterConfig {
 
         registrationBean.setFilter(authFilter);
         registrationBean.setOrder(1);
-        registrationBean.addUrlPatterns("/api/user/getUser"); // will modify later to add other protected routes
+
+        // authorized authentication routes
+        registrationBean.addUrlPatterns("/api/auth/logout");
+
+        // authorized user routes
+        registrationBean.addUrlPatterns("/api/user/getUser");
 
         return registrationBean;
     }

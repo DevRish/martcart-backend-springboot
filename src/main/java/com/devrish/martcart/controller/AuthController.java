@@ -6,7 +6,9 @@ import com.devrish.martcart.dto.responses.AuthResponse;
 import com.devrish.martcart.dto.responses.GenericResponse;
 import com.devrish.martcart.dto.responses.ValidationResponse;
 import com.devrish.martcart.exception.auth.InvalidCredentialsException;
+import com.devrish.martcart.exception.auth.UserExistsException;
 import com.devrish.martcart.exception.auth.UserNotFoundException;
+import com.devrish.martcart.model.User;
 import com.devrish.martcart.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,6 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<GenericResponse> login(@Valid @RequestBody LoginBody body, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            log.warn("Validation Error: {}", bindingResult.getAllErrors().get(0).getDefaultMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     new ValidationResponse(
                             false,
@@ -64,13 +65,56 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public GenericResponse signup(@RequestBody SignupBody body) {
-        return GenericResponse.builder().status(true).message("Route hit successfully").build();
+    public ResponseEntity<GenericResponse> signup(@Valid @RequestBody SignupBody body, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ValidationResponse(
+                            false,
+                            "Validation Error!",
+                            bindingResult.getAllErrors().stream()
+                                    .map(ObjectError::getDefaultMessage)
+                                    .collect(Collectors.toList())
+                    )
+            );
+        }
+        try {
+            AuthResponse res = authService.signup(
+                    User.builder()
+                            .firstname(body.getFirstname())
+                            .lastname(body.getLastname())
+                            .username(body.getUsername())
+                            .password(body.getPassword())
+                            .email(body.getEmail())
+                            .phone(body.getPhone())
+                            .userType(body.getUserType())
+                            .build()
+            );
+            return ResponseEntity.status(HttpStatus.OK).body(res);
+        } catch (UserExistsException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    GenericResponse.builder().status(false).message(e.getMessage()).build()
+            );
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    GenericResponse.builder().status(false).message("Server Error").build()
+            );
+        }
     }
 
     @PostMapping("/logout")
-    public GenericResponse logout(@RequestHeader(HttpHeaders.AUTHORIZATION) String authToken) {
-        return GenericResponse.builder().status(true).message("Route hit successfully").build();
+    public ResponseEntity<GenericResponse> logout(@RequestAttribute(name = "currentUser") User currentUser) {
+        try {
+            AuthResponse res = authService.logout(currentUser);
+            return ResponseEntity.status(HttpStatus.OK).body(res);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    GenericResponse.builder().status(false).message("Server Error").build()
+            );
+
+        }
     }
 
 }

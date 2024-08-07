@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class User {
     @Builder.Default
     private Date joinDate = new Date(); // default value => current date
 
-    private List<CartItem> cart;
+    @Builder.Default
+    private List<CartItem> cart = new ArrayList<>();
 
 }
