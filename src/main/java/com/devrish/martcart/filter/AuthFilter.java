@@ -5,7 +5,7 @@ import com.devrish.martcart.model.Session;
 import com.devrish.martcart.model.User;
 import com.devrish.martcart.repository.SessionRepository;
 import com.devrish.martcart.repository.UserRepository;
-import com.devrish.martcart.util.JWT.JWTPayload;
+import com.devrish.martcart.util.jwt.JWTPayload;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

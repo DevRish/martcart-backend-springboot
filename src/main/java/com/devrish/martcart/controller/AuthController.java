@@ -4,7 +4,6 @@ import com.devrish.martcart.dto.requests.auth.LoginBody;
 import com.devrish.martcart.dto.requests.auth.SignupBody;
 import com.devrish.martcart.dto.responses.AuthResponse;
 import com.devrish.martcart.dto.responses.GenericResponse;
-import com.devrish.martcart.dto.responses.ValidationResponse;
 import com.devrish.martcart.exception.auth.InvalidCredentialsException;
 import com.devrish.martcart.exception.auth.UserExistsException;
 import com.devrish.martcart.exception.auth.UserNotFoundException;
@@ -13,14 +12,12 @@ import com.devrish.martcart.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.stream.Collectors;
+import static com.devrish.martcart.util.validation.ValidationUtils.generateValidationResult;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -32,17 +29,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<GenericResponse> login(@Valid @RequestBody LoginBody body, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ValidationResponse(
-                            false,
-                            "Validation Error!",
-                            bindingResult.getAllErrors().stream()
-                                    .map(ObjectError::getDefaultMessage)
-                                    .collect(Collectors.toList())
-                    )
-            );
-        }
+        if (bindingResult.hasErrors()) return generateValidationResult(bindingResult);
         try {
             AuthResponse res = authService.login(body);
             return ResponseEntity.status(HttpStatus.OK).body(res);
@@ -66,17 +53,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<GenericResponse> signup(@Valid @RequestBody SignupBody body, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ValidationResponse(
-                            false,
-                            "Validation Error!",
-                            bindingResult.getAllErrors().stream()
-                                    .map(ObjectError::getDefaultMessage)
-                                    .collect(Collectors.toList())
-                    )
-            );
-        }
+        if (bindingResult.hasErrors()) return generateValidationResult(bindingResult);
         try {
             AuthResponse res = authService.signup(
                     User.builder()

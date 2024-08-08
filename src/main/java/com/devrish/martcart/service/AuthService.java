@@ -9,8 +9,8 @@ import com.devrish.martcart.model.Session;
 import com.devrish.martcart.model.User;
 import com.devrish.martcart.repository.SessionRepository;
 import com.devrish.martcart.repository.UserRepository;
-import com.devrish.martcart.util.JWT.JWTHeader;
-import com.devrish.martcart.util.JWT.JWTPayload;
+import com.devrish.martcart.util.jwt.JWTHeader;
+import com.devrish.martcart.util.jwt.JWTPayload;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,8 +77,8 @@ public class AuthService {
         // passwords matching
         Session newSession = sessionRepository.save(Session.builder().userId(existingUser).build());
 
-        // JWT : header, payload, signature
-        JWTHeader header = JWTHeader.builder().alg("HS512").typ("JWT").build();
+        // jwt : header, payload, signature
+        JWTHeader header = JWTHeader.builder().alg("HS512").typ("jwt").build();
         String encodedHeader = encodeBase64Url(header);
 
         JWTPayload payload = JWTPayload.builder().id(newSession.get_id().toString()).build();

@@ -21,6 +21,9 @@ public class FilterConfig {
         // authorized user routes
         registrationBean.addUrlPatterns("/api/user/getUser");
 
+        // authorize all cart routes
+        registrationBean.addUrlPatterns("/api/cart/*");
+
         return registrationBean;
     }
 
