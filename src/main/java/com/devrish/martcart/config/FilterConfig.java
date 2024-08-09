@@ -18,11 +18,16 @@ public class FilterConfig {
         // authorized authentication routes
         registrationBean.addUrlPatterns("/api/auth/logout");
 
-        // authorized user routes
-        registrationBean.addUrlPatterns("/api/user/getUser");
+        // all user routes are authorized
+        registrationBean.addUrlPatterns("/api/user/*");
 
-        // authorize all cart routes
+        // all cart routes are authorized
         registrationBean.addUrlPatterns("/api/cart/*");
+
+        // all order routes are authorized
+        registrationBean.addUrlPatterns("/api/order/*");
+
+        // all other routes unauthorized
 
         return registrationBean;
     }

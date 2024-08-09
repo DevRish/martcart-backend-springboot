@@ -35,7 +35,7 @@ public class Order {
 
     private String address;
 
-    private Long totalPrice;
+    private Double totalPrice;
 
     @Builder.Default
     private Date orderedAt = new Date();

@@ -103,7 +103,7 @@ public class MartcartApplication {
 					.address("123 XYZ Street, India")
 					.quantity(2L)
 					.productId(sampleProduct)
-					.totalPrice((long)(sampleProduct.getCurrentPrice() * 2))
+					.totalPrice(sampleProduct.getCurrentPrice() * 2)
 					.userId(sampleBuyer)
 					.build();
 

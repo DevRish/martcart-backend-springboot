@@ -1,5 +1,7 @@
 package com.devrish.martcart.model;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +20,8 @@ public class Category {
     @Id
     private ObjectId _id;
 
+    @NotNull(message = "name is required")
+    @NotBlank(message = "name cannot be blank")
     private String name;
 
     @Builder.Default
