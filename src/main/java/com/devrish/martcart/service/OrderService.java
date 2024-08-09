@@ -7,7 +7,7 @@ import com.devrish.martcart.model.Order;
 import com.devrish.martcart.model.Product;
 import com.devrish.martcart.model.User;
 import com.devrish.martcart.repository.OrderRepository;
-import com.devrish.martcart.repository.ProductRepository;
+import com.devrish.martcart.repository.product.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -24,7 +24,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<GenericResponse> createCategory(
             @Valid @RequestBody Category category,
             BindingResult bindingResult
@@ -41,7 +41,7 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<GenericResponse> getCategories() {
         try {
             CategoryResponse res = categoryService.getAll();

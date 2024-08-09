@@ -5,5 +5,6 @@ export DATABASE_URL=mongodb://localhost:27017/martcart
 #    watch --chgexit "ls -lR ./src | sha1sum" && mvn compile
 #done > /dev/null 2>&1 &
 
+#mvn clean # sometimes may be required, specially when renaming classes
 mvn compile
 mvn spring-boot:run

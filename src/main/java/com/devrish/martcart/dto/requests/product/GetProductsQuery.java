@@ -4,27 +4,26 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetProductsParams {
+public class GetProductsQuery {
 
-    private String id;
     private String name;
     private Double minPrice;
     private Double maxPrice;
     private Double minRating;
     private Double maxRating;
-    private String categoryId;
-    private Long page;
-    private Long limit;
+    private ObjectId categoryId;
+    private Integer page;
+    private Integer limit;
 
     @Override
     public String toString() {
-        return "GetProductsParams{" +
-                "id='" + id + '\'' +
+        return "GetProductsQuery{" +
                 ", name='" + name + '\'' +
                 ", minPrice=" + minPrice +
                 ", maxPrice=" + maxPrice +

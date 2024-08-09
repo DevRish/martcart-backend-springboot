@@ -24,7 +24,7 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<GenericResponse> getEvents() {
         try {
             EventResponse res = eventService.getAll();

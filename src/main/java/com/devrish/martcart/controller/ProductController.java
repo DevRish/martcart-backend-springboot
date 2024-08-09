@@ -1,7 +1,7 @@
 package com.devrish.martcart.controller;
 
 import com.devrish.martcart.dto.requests.product.CreateProductBody;
-import com.devrish.martcart.dto.requests.product.GetProductsParams;
+import com.devrish.martcart.dto.requests.product.GetProductsQuery;
 import com.devrish.martcart.dto.responses.GenericResponse;
 import com.devrish.martcart.dto.responses.ProductResponse;
 import com.devrish.martcart.exception.cart.ProductNotFoundException;
@@ -23,9 +23,17 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public GenericResponse getProducts(GetProductsParams params) {
-        log.info(params.toString());
-        return GenericResponse.builder().status(true).message("Route hit successfully").build();
+    public ResponseEntity<GenericResponse> getProducts(GetProductsQuery reqQuery) {
+        log.info(reqQuery.toString());
+        try {
+            ProductResponse res = productService.getAll(reqQuery);
+            return ResponseEntity.status(HttpStatus.OK).body(res);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    GenericResponse.builder().status(false).message("Server Error").build()
+            );
+        }
     }
 
     @GetMapping("/{id}")

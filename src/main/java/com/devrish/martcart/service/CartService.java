@@ -6,7 +6,7 @@ import com.devrish.martcart.exception.cart.ProductNotFoundException;
 import com.devrish.martcart.model.CartItem;
 import com.devrish.martcart.model.Product;
 import com.devrish.martcart.model.User;
-import com.devrish.martcart.repository.ProductRepository;
+import com.devrish.martcart.repository.product.ProductRepository;
 import com.devrish.martcart.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

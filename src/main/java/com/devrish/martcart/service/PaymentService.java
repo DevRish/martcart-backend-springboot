@@ -10,6 +10,10 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+// Reference: https://razorpay.com/docs/payments/server-integration/java/payment-gateway/build-integration/
+// Downloading library jar manually wasn't required though, as already present in maven central repo
+// https://mvnrepository.com/artifact/com.razorpay/razorpay-java
+
 @Component
 @Slf4j
 public class PaymentService {
