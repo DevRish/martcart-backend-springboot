@@ -11,6 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CreateRazorpayOrderBody {
 
-    private Long amount;
+    private Double amount;
 
 }
