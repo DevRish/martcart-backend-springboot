@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,12 +44,32 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GenericResponse> getCategoryById(
+    public ResponseEntity<GenericResponse> getProductById(
             @Valid @PathVariable @NotNull(message = "id is required") String id
     ) {
         try {
             ProductResponse res = productService.getById(id);
             return ResponseEntity.status(HttpStatus.OK).body(res);
+        } catch(ProductNotFoundException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    GenericResponse.builder().status(false).message(e.getMessage()).build()
+            );
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    GenericResponse.builder().status(false).message("Server Error").build()
+            );
+        }
+    }
+
+    @GetMapping("/image/{id}")
+    public ResponseEntity<?> getProductImageById(
+            @Valid @PathVariable @NotNull(message = "id is required") String id
+    ) {
+        try {
+            Resource res = productService.getImageById(id);
+            return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.IMAGE_PNG).body(res);
         } catch(ProductNotFoundException e) {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(

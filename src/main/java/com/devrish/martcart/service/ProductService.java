@@ -8,6 +8,7 @@ import com.devrish.martcart.model.User;
 import com.devrish.martcart.repository.product.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -67,6 +68,13 @@ public class ProductService {
                 null,
                 1L
         );
+    }
+
+    public Resource getImageById(String id) throws Exception {
+        Product product = productRepository.findById(id).orElse(null);
+        if (product == null) throw new ProductNotFoundException();
+        String key = product.getImagePath().substring(1);
+        return storageService.getFile(key);
     }
 
 }

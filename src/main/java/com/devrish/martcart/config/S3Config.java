@@ -1,14 +1,17 @@
 package com.devrish.martcart.config;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 
 @Configuration
+@Slf4j
 public class S3Config {
 
     @Value("${AWS_ACCESS_KEY_ID}")
@@ -21,13 +24,18 @@ public class S3Config {
     private String region;
 
     @Bean
-    public AmazonS3 s3client() {
-
-        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
-        return AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-                .withRegion(region)
+    public S3Client s3Client() {
+        AwsBasicCredentials credentials = AwsBasicCredentials.builder()
+                .accessKeyId(awsAccessKey)
+                .secretAccessKey(awsSecretKey)
                 .build();
+        AwsCredentialsProvider credentialsProvider = StaticCredentialsProvider.create(credentials);
+        S3Client s3Client = S3Client.builder()
+                .credentialsProvider(credentialsProvider)
+                .region(Region.of(region))
+                .build();
+        log.info("AWS S3 Client initialized successfully!");
+        return s3Client;
     }
 
 }
