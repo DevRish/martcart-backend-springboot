@@ -27,6 +27,9 @@ public class FilterConfig {
         // all order routes are authorized
         registrationBean.addUrlPatterns("/api/order/*");
 
+        // authorized product routes
+        registrationBean.addUrlPatterns("/api/product/create");
+
         // all other routes unauthorized
 
         return registrationBean;

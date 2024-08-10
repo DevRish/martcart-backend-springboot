@@ -1,5 +1,7 @@
 package com.devrish.martcart.model;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +11,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -23,13 +26,17 @@ public class Product {
 
     // Searchable Data
 
+    @NotNull(message = "name is required")
+    @NotBlank(message = "name cannot be blank")
     private String name;
 
+    @NotNull(message = "currentPrice is required")
     private Double currentPrice;
 
     @Builder.Default
     private Double rating = -1.0;
 
+    @NotNull(message = "category (id) is required")
     @DocumentReference
     private Category category; // Reference to Category
 
@@ -38,12 +45,16 @@ public class Product {
 
     // Non-Searchable Data
 
+    @NotNull(message = "originalPrice is required")
     private Double originalPrice;
 
-    private String imagePath;
+    @Builder.Default
+    private String imagePath = "";
 
-    private List<ChoiceItem> choices;
+    @Builder.Default
+    private List<ChoiceItem> choices = new ArrayList<>();
 
-    private List<SpecificationItem> specifications;
+    @Builder.Default
+    private List<SpecificationItem> specifications = new ArrayList<>();
 
 }
