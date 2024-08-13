@@ -4,9 +4,21 @@ import com.devrish.martcart.filter.AuthFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 public class FilterConfig {
+
+    @Bean
+    public FilterRegistrationBean<CorsFilter> corsFilterFilterRegistrationBean(CorsFilter corsFilter) {
+        final FilterRegistrationBean<CorsFilter> registrationBean = new FilterRegistrationBean<>();
+
+        registrationBean.setFilter(corsFilter);
+        registrationBean.setOrder(0); // first the cors filter, then other (auth, etc.)
+        registrationBean.addUrlPatterns("/*");
+
+        return registrationBean;
+    }
 
     @Bean
     FilterRegistrationBean<AuthFilter> authFilterFilterRegistrationBean(AuthFilter authFilter) {
