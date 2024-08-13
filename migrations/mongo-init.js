@@ -14,9 +14,9 @@ db.users.insertMany([
     userType: "BUYER",
     phone: "9988776655",
     email: "johndoe@test.com",
-    password: "7f6f467575be3c486742105261a957e8c3984f7cfe08d04d6c22ff5ca2499f807b25ca8d7423a4be26cca5d1a03261de0ae973ff736eaa687b150805b377f527", // "qwerty"
+    password: "279fd2516a62176eaa1edd8f83b968655cb57f82f2aa5a0b1511b4507f60a96149dd9ea629bd674927245d5bb723677733483ca2b9c52744a007694db7cdd521", // "qwerty"
     cart: [],
-    joinDate: ISODate("2023-09-28T10:53:17.505+00:00")
+    joinDate: ISODate("2024-08-13T05:56:46.974+00:00")
   }, 
   {
     _id: ObjectId(ObjectId("6582582b9345fd962ccb8bc2")),
@@ -26,9 +26,9 @@ db.users.insertMany([
     userType: "SELLER",
     phone: "9988776688",
     email: "jackdoe@test.com",
-    password: "7f6f467575be3c486742105261a957e8c3984f7cfe08d04d6c22ff5ca2499f807b25ca8d7423a4be26cca5d1a03261de0ae973ff736eaa687b150805b377f527", // "qwerty"
+    password: "279fd2516a62176eaa1edd8f83b968655cb57f82f2aa5a0b1511b4507f60a96149dd9ea629bd674927245d5bb723677733483ca2b9c52744a007694db7cdd521", // "qwerty"
     cart: [],
-    joinDate: ISODate("2023-09-28T10:53:17.505+00:00")
+    joinDate: ISODate("2024-08-13T05:56:46.974+00:00")
   }
 ]);
 
