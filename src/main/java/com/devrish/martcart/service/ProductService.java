@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Component
 @Slf4j
 public class ProductService {
@@ -38,12 +40,22 @@ public class ProductService {
 
     public ProductResponse getAll(GetProductsQuery reqQuery) throws Exception {
         Page<Product> page = productRepository.findAllDynamicQuery(reqQuery);
+        List<Product> products = page.getContent();
+        products.forEach(product -> {
+            product.setSoldBy(User.builder()
+                    ._id(product.getSoldBy().get_id())
+                    .firstname(product.getSoldBy().getFirstname())
+                    .lastname(product.getSoldBy().getLastname())
+                    .build()
+            );
+        });
+        Long total = page.getTotalElements();
         return new ProductResponse(
                 true,
                 "Products fetched successfully",
                 null,
-                page.getContent(),
-                page.getTotalElements()
+                products,
+                total
         );
     }
 
