@@ -6,7 +6,7 @@ import com.devrish.martcart.dto.responses.GenericResponse;
 import com.devrish.martcart.exception.cart.ProductNotFoundException;
 import com.devrish.martcart.model.User;
 import com.devrish.martcart.service.CartService;
-import com.devrish.martcart.util.validation.ValidationUtils;
+import com.devrish.martcart.service.ValidationService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,9 @@ public class CartController {
 
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    private ValidationService validationService;
 
     @GetMapping("/getCart")
     public ResponseEntity<GenericResponse> getCart(@RequestAttribute(name = "currentUser") User currentUser) {
@@ -42,7 +45,7 @@ public class CartController {
             @RequestAttribute(name = "currentUser") User currentUser,
             BindingResult bindingResult
     ) {
-        if (bindingResult.hasErrors()) return ValidationUtils.generateValidationResult(bindingResult);
+        if (bindingResult.hasErrors()) return validationService.generateValidationResult(bindingResult);
         try {
             CartResponse res = cartService.addItemToCart(body, currentUser);
             return ResponseEntity.status(HttpStatus.OK).body(res);
@@ -65,7 +68,7 @@ public class CartController {
             @RequestAttribute(name = "currentUser") User currentUser,
             BindingResult bindingResult
     ) {
-        if (bindingResult.hasErrors()) return ValidationUtils.generateValidationResult(bindingResult);
+        if (bindingResult.hasErrors()) return validationService.generateValidationResult(bindingResult);
         try {
             CartResponse res = cartService.removeItemFromCart(body, currentUser);
             return ResponseEntity.status(HttpStatus.OK).body(res);

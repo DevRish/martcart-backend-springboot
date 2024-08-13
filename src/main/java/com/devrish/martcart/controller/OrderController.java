@@ -6,7 +6,7 @@ import com.devrish.martcart.dto.responses.OrderResponse;
 import com.devrish.martcart.exception.cart.ProductNotFoundException;
 import com.devrish.martcart.model.User;
 import com.devrish.martcart.service.OrderService;
-import com.devrish.martcart.util.validation.ValidationUtils;
+import com.devrish.martcart.service.ValidationService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private ValidationService validationService;
 
     @GetMapping("/getorderdata")
     public ResponseEntity<GenericResponse> getOrderData(@RequestAttribute(name = "currentUser") User currentUser) {
@@ -42,7 +45,7 @@ public class OrderController {
             @RequestAttribute(name = "currentUser") User currentUser,
             BindingResult bindingResult
     ) {
-        if (bindingResult.hasErrors()) return ValidationUtils.generateValidationResult(bindingResult);
+        if (bindingResult.hasErrors()) return validationService.generateValidationResult(bindingResult);
         try {
             OrderResponse res = orderService.addOrder(body, currentUser);
             return ResponseEntity.status(HttpStatus.OK).body(res);

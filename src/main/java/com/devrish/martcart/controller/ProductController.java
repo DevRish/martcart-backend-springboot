@@ -1,6 +1,5 @@
 package com.devrish.martcart.controller;
 
-import com.devrish.martcart.dto.requests.product.CreateProductBody;
 import com.devrish.martcart.dto.requests.product.GetProductsQuery;
 import com.devrish.martcart.dto.responses.GenericResponse;
 import com.devrish.martcart.dto.responses.ProductResponse;
@@ -8,7 +7,7 @@ import com.devrish.martcart.exception.cart.ProductNotFoundException;
 import com.devrish.martcart.model.Product;
 import com.devrish.martcart.model.User;
 import com.devrish.martcart.service.ProductService;
-import com.devrish.martcart.util.validation.ValidationUtils;
+import com.devrish.martcart.service.ValidationService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +27,9 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ValidationService validationService;
 
     @GetMapping
     public ResponseEntity<GenericResponse> getProducts(GetProductsQuery reqQuery) {
@@ -91,7 +93,7 @@ public class ProductController {
             BindingResult bindingResult
     ) {
         // log.info("Product: {}", product.toString());
-        if (bindingResult.hasErrors()) return ValidationUtils.generateValidationResult(bindingResult);
+        if (bindingResult.hasErrors()) return validationService.generateValidationResult(bindingResult);
         try {
             product.setSoldBy(currentUser);
             ProductResponse res = productService.createProduct(product, image);

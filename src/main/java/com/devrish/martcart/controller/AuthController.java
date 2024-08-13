@@ -9,6 +9,7 @@ import com.devrish.martcart.exception.auth.UserExistsException;
 import com.devrish.martcart.exception.auth.UserNotFoundException;
 import com.devrish.martcart.model.User;
 import com.devrish.martcart.service.AuthService;
+import com.devrish.martcart.service.ValidationService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import static com.devrish.martcart.util.validation.ValidationUtils.generateValidationResult;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -27,9 +26,12 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private ValidationService validationService;
+
     @PostMapping("/login")
     public ResponseEntity<GenericResponse> login(@Valid @RequestBody LoginBody body, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) return generateValidationResult(bindingResult);
+        if (bindingResult.hasErrors()) return validationService.generateValidationResult(bindingResult);
         try {
             AuthResponse res = authService.login(body);
             return ResponseEntity.status(HttpStatus.OK).body(res);
@@ -53,7 +55,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<GenericResponse> signup(@Valid @RequestBody SignupBody body, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) return generateValidationResult(bindingResult);
+        if (bindingResult.hasErrors()) return validationService.generateValidationResult(bindingResult);
         try {
             AuthResponse res = authService.signup(
                     User.builder()

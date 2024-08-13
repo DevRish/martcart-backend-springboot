@@ -1,12 +1,11 @@
 package com.devrish.martcart.controller;
 
-import com.devrish.martcart.dto.responses.CartResponse;
 import com.devrish.martcart.dto.responses.CategoryResponse;
 import com.devrish.martcart.dto.responses.GenericResponse;
 import com.devrish.martcart.exception.category.CategoryNotFoundException;
 import com.devrish.martcart.model.Category;
 import com.devrish.martcart.service.CategoryService;
-import com.devrish.martcart.util.validation.ValidationUtils;
+import com.devrish.martcart.service.ValidationService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -24,12 +23,15 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private ValidationService validationService;
+
     @PostMapping
     public ResponseEntity<GenericResponse> createCategory(
             @Valid @RequestBody Category category,
             BindingResult bindingResult
     ) {
-        if (bindingResult.hasErrors()) return ValidationUtils.generateValidationResult(bindingResult);
+        if (bindingResult.hasErrors()) return validationService.generateValidationResult(bindingResult);
         try {
             CategoryResponse res = categoryService.createCategory(category);
             return ResponseEntity.status(HttpStatus.OK).body(res);

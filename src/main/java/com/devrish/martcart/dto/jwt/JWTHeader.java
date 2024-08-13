@@ -1,4 +1,4 @@
-package com.devrish.martcart.util.jwt;
+package com.devrish.martcart.dto.jwt;
 
 import lombok.*;
 

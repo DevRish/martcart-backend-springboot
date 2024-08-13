@@ -1,4 +1,4 @@
-package com.devrish.martcart.util.validation;
+package com.devrish.martcart.service;
 
 import com.devrish.martcart.dto.responses.GenericResponse;
 import com.devrish.martcart.dto.responses.ValidationResponse;
@@ -10,9 +10,10 @@ import org.springframework.validation.ObjectError;
 
 import java.util.stream.Collectors;
 
-public class ValidationUtils {
+@Component
+public class ValidationService {
 
-    public static ResponseEntity<GenericResponse> generateValidationResult(BindingResult bindingResult) {
+    public ResponseEntity<GenericResponse> generateValidationResult(BindingResult bindingResult) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 new ValidationResponse(
                         false,
